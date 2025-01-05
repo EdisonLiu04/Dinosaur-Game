@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 public class ChromeDinosaur extends JPanel implements ActionListener, KeyListener{
-    int boardWidth = 750;
-    int boardHeight = 250;
+    int bWidth = 750;
+    int bHeight = 250;
 
     //images
     Image dinosaurImg;
@@ -37,7 +37,7 @@ public class ChromeDinosaur extends JPanel implements ActionListener, KeyListene
     int dinosaurWidth = 88;
     int dinosaurHeight = 94;
     int dinosaurX = 50;
-    int dinosaurY = boardHeight - dinosaurHeight;
+    int dinosaurY = bHeight - dinosaurHeight;
 
     Block dinosaur;
 
@@ -48,13 +48,13 @@ public class ChromeDinosaur extends JPanel implements ActionListener, KeyListene
 
     int cactusHeight = 70;
     int cactusX = 700;
-    int cactusY = boardHeight - cactusHeight;
+    int cactusY = bHeight - cactusHeight;
     ArrayList<Block> cactusArray;
 
     //movement
-    int velocityX = -12;
-    int velocityY = 0;
-    int gravity = 1;
+    int vX = -12;
+    int vY = 0;
+    int drag = 1;
 
     //end game
     boolean gameOver = false;
@@ -66,7 +66,7 @@ public class ChromeDinosaur extends JPanel implements ActionListener, KeyListene
     Timer placeCactusTimer;
 
     public ChromeDinosaur() {
-        setPreferredSize(new Dimension(boardWidth, boardHeight));
+        setPreferredSize(new Dimension(bWidth, bHeight));
         setBackground(Color.lightGray);
         setFocusable(true);
         addKeyListener(this);
@@ -135,7 +135,7 @@ public class ChromeDinosaur extends JPanel implements ActionListener, KeyListene
 
         //score
         g.setColor(Color.black);
-        g.setFont(new Font("Courier", Font.PLAIN, 32));
+        g.setFont(new Font("Times New Roman", Font.PLAIN, 32));
         if(gameOver){
             g.drawString("Game Over: " + String.valueOf(score), 10, 35);
         }
@@ -145,18 +145,18 @@ public class ChromeDinosaur extends JPanel implements ActionListener, KeyListene
     }
 
     public void move(){
-        velocityY += gravity;
-        dinosaur.y+=velocityY;
+        vY += drag;
+        dinosaur.y+=vY;
 
         if (dinosaur.y > dinosaurY){
             dinosaur.y = dinosaurY;
-            velocityY = 0;
+            vY = 0;
             dinosaur.img = dinosaurImg;
         }
         //cactus
         for(int i = 0; i<cactusArray.size(); i++){
             Block cactus = cactusArray.get(i);
-            cactus.x += velocityX;
+            cactus.x += vX;
 
             if(collision(dinosaur,cactus)){
                 gameOver = true;
@@ -169,7 +169,7 @@ public class ChromeDinosaur extends JPanel implements ActionListener, KeyListene
     }
 
     boolean collision(Block a, Block b){
-        return a.x < b.x + b.width &&
+        return  a.x < b.x + b.width &&
                 a.x + a.width > b.x &&
                 a.y < b.y + b.height &&
                 a.y + a.height > b.y;
@@ -194,13 +194,13 @@ public class ChromeDinosaur extends JPanel implements ActionListener, KeyListene
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_SPACE){
             if(dinosaur.y == dinosaurY) {
-                velocityY = -17;
+                vY = -17;
                 dinosaur.img = dinosaurJumpImg;
             }
             if(gameOver){
                 dinosaur.y = dinosaurY;
                 dinosaur.img = dinosaurImg;
-                velocityY = 0;
+                vY = 0;
                 cactusArray.clear();
                 score = 0;
                 gameOver = false;
